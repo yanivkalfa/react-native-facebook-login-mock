@@ -1,6 +1,6 @@
 {
   "name": "react-native-facebook-login-mock",
-  "version": "0.0.02",
+  "version": "0.0.21",
   "description": "React native facebook login that alows changing the login button's style. ",
   "main": "./lib/index.ios.js",
   "scripts": {
@@ -17,10 +17,6 @@
     "type": "git",
     "url": "https://github.com/yanivkalfa/react-native-facebook-login-mock.git"
   },
-  "files": [
-    "lib",
-    "src"
-  ],
   "keywords": [
     "react",
     "native",
