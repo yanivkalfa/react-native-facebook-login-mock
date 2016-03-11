@@ -12,7 +12,7 @@ import React, {
 
 import extend from 'extend';
 
-import { getFBCredentials, login, logout } from './util';
+import { getFBCredentials, login, logout, catchError } from './util';
 import defaultStyles from './theme/style';
 const { FBLoginManager } = NativeModules;
 
@@ -20,6 +20,7 @@ export default class FBLoginMock extends Component {
   constructor(props) {
     super(props);
 
+    this.willUnmountSoon = false;
     this.state = {
       credentials: null,
       subscriptions: [],
@@ -28,15 +29,15 @@ export default class FBLoginMock extends Component {
 
   handleLogin(){
     login(this.props.permissions || null).then((data) => {
-      this.setState({ credentials : data.credentials });
+      if (!this.willUnmountSoon) this.setState({ credentials : data.credentials });
     }).catch((err) => {
-      this.setState({ credentials : null });
+      if (!this.willUnmountSoon) this.setState({ credentials : null });
     })
   }
 
   handleLogout(){
     logout().then((data) => {
-      this.setState({ credentials : null });
+      if (!this.willUnmountSoon) this.setState({ credentials : null });
     }).catch((err) => {
       console.warn(err);
     })
@@ -56,7 +57,7 @@ export default class FBLoginMock extends Component {
   }
 
   componentWillMount() {
-
+    this.willUnmountSoon = false;
     // extending default styles with provided styles.
     const extendedStyles = extend(true, {}, defaultStyles, this.props.styleOverride);
     this.setState({styles: StyleSheet.create(extendedStyles) });
@@ -76,12 +77,13 @@ export default class FBLoginMock extends Component {
   }
 
   componentWillUnmount() {
+    this.willUnmountSoon = true;
     this.state.subscriptions.forEach(this.unSubscribeEvents);
+
   }
 
   componentDidMount() {
     getFBCredentials().then((data)=>{
-      if( !this.isMounted() ) return false;
       this.setState({ credentials : data.credentials });
     }).catch((err) =>{
       this.setState({ credentials : null });
