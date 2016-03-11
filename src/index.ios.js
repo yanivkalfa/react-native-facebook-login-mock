@@ -10,6 +10,8 @@ import React, {
   DeviceEventEmitter
 } from 'react-native';
 
+import extend from 'extend';
+
 import { getFBCredentials, login, logout } from './util';
 const { FBLoginManager } = NativeModules;
 
@@ -53,6 +55,8 @@ export default class FBLoginMock extends Component {
   }
 
   componentWillMount() {
+    this.props.style = extend(true, styles, this.props.style);
+
     const subscriptions = this.state.subscriptions;
     Object.keys(FBLoginManager.Events).forEach((eventType) => {
       let sub = DeviceEventEmitter.addListener( FBLoginManager.Events[eventType], this.invokeHandler.bind(this, eventType) );
@@ -86,8 +90,9 @@ export default class FBLoginMock extends Component {
     const loginText = this.props.loginText || "Log in with Facebook";
     const logoutText = this.props.logoutText || "Log out";
     const text = this.state.credentials ? logoutText : loginText;
+    const styles = this.props.styles;
     return (
-      <View style={this.props.style}>
+      <View>
         <TouchableHighlight
           style={styles.container}
           onPress={this.onPress.bind(this)}
