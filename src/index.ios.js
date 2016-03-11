@@ -120,6 +120,7 @@ FBLoginMock.propTypes = {
   loginText: PropTypes.string,
   logoutText: PropTypes.string,
   loginBehavior: PropTypes.number, // default: Native
+  onPress: PropTypes.func,
   onLogin: PropTypes.func,
   onLogout: PropTypes.func,
   onLoginFound: PropTypes.func,
