@@ -1,12 +1,13 @@
-import react, {
+import React, {
   Component,
   View,
   StyleSheet,
+  Text,
+  Image,
+  TouchableHighlight,
   PropTypes,
   NativeModules,
-  requireNativeComponent,
-  NativeMethodsMixin,
-  DeviceEventEmitter,
+  DeviceEventEmitter
 } from 'react-native';
 
 import { getFBCredentials, login, logout } from './util';
@@ -15,9 +16,6 @@ const { FBLoginManager } = NativeModules;
 export default class FBLoginMock extends Component {
   constructor(props) {
     super(props);
-
-
-    Object.assign(this, NativeMethodsMixin);
 
     this.state = {
       credentials: null,
@@ -49,11 +47,9 @@ export default class FBLoginMock extends Component {
     this.props.onPress && this.props.onPress();
   }
 
-
   invokeHandler(eventType, eventData) {
     const eventHandler = this.props["on" + eventType];
-    if (typeof eventHandler !== 'function') throw new Error('Handler is not a functions');
-    eventHandler(eventData);
+    if (typeof eventHandler === 'function') eventHandler(eventData);
   }
 
   componentWillMount() {
@@ -76,13 +72,14 @@ export default class FBLoginMock extends Component {
   }
 
   componentDidMount() {
-    getFBCredentials.then((data)=>{
+    getFBCredentials().then((data)=>{
       if( !this.isMounted() ) return false;
       this.setState({ credentials : data.credentials });
     }).catch((err) =>{
       this.setState({ credentials : null });
-      console.log(err);
+      console.log('Request failed: ', err);
     });
+
   }
 
   render() {
@@ -93,7 +90,7 @@ export default class FBLoginMock extends Component {
       <View style={this.props.style}>
         <TouchableHighlight
           style={styles.container}
-          onPress={this.onPress}
+          onPress={this.onPress.bind(this)}
         >
           <View style={styles.FBLoginButton}>
             <Image style={styles.FBLogo} source={require('../images/FB-f-Logo__white_144.png')} />
@@ -104,7 +101,6 @@ export default class FBLoginMock extends Component {
       </View>
     );
   }
-
 }
 
 FBLoginMock.propTypes = {
@@ -128,7 +124,7 @@ var styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   FBLoginButton: {
     flex: 1,
@@ -136,7 +132,7 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
 
-    height: 50,
+    height: 30,
     width: 175,
     paddingLeft: 2,
 
@@ -151,19 +147,19 @@ var styles = StyleSheet.create({
     shadowOffset: {
       height: 1,
       width: 0
-    },
+    }
   },
   FBLoginButtonText: {
     color: 'white',
     fontWeight: '600',
     fontFamily: 'Helvetica neue',
-    fontSize: 14.2,
+    fontSize: 14.2
   },
   FBLoginButtonTextLoggedIn: {
-    marginLeft: 5,
+    marginLeft: 5
   },
   FBLoginButtonTextLoggedOut: {
-    marginLeft: 18,
+    marginLeft: 18
   },
   FBLogo: {
     position: 'absolute',
@@ -171,94 +167,6 @@ var styles = StyleSheet.create({
     width: 14,
 
     left: 7,
-    top: 7,
-  },
+    top: 7
+  }
 });
-/*
-var FBLoginMock = React.createClass({
-  statics: {
-    Events: FBLoginManager.Events,
-  },
-
-  propTypes: {
-    style: View.propTypes.style,
-    permissions: PropTypes.array, // default: ["public_profile", "email"]
-    loginBehavior: PropTypes.number, // default: Native
-    onLogin: PropTypes.func,
-    onLogout: PropTypes.func,
-    onLoginFound: PropTypes.func,
-    onLoginNotFound: PropTypes.func,
-    onError: PropTypes.func,
-    onCancel: PropTypes.func,
-    onPermissionsMissing: PropTypes.func,
-  },
-
-  getInitialState: function(){
-    return {
-      credentials: null,
-      subscriptions: [],
-    };
-  },
-
-  mixins: [NativeMethodsMixin],
-
-  componentWillMount: function(){
-    var _this = this;
-    var subscriptions = this.state.subscriptions;
-
-    // For each event key in FBLoginManager constantsToExport
-    // Create listener and call event handler from props
-    // e.g.  this.props.onError, this.props.onLogin
-    Object.keys(FBLoginManager.Events).forEach(function(event){
-      subscriptions.push(DeviceEventEmitter.addListener(
-        FBLoginManager.Events[event],
-        (eventData) => {
-          // event handler defined? call it and pass along any event data
-          var eventHandler = _this.props["on"+event];
-          eventHandler && eventHandler(eventData);
-        }
-      ));
-    })
-
-    // Add listeners to state
-    this.setState({ subscriptions : subscriptions });
-  },
-
-  componentWillUnmount: function(){
-    var subscriptions = this.state.subscriptions;
-    subscriptions.forEach(function(subscription){
-      subscription.remove();
-    });
-  },
-
-  componentDidMount: function(){
-    var _this = this;
-    FBLoginManager.getCredentials(function(error, data){
-      if( !_this.isMounted() ) return;
-      if (!error) {
-        _this.setState({ credentials : data.credentials });
-      } else {
-        _this.setState({ credentials : null });
-      }
-    });
-  },
-
-  render: function() {
-    var props = {
-      ...this.props,
-      style: ([styles.base, this.props.style]),
-    };
-
-    return <RCTFBLogin {...props} />
-  },
-});
-
-var RCTFBLogin = requireNativeComponent('RCTFBLogin', FBLogin);
-
-var styles = StyleSheet.create({
-  base: {
-    width: 500,
-    height: 30,
-  },
-});
-*/
