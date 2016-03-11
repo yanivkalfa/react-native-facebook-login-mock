@@ -13,6 +13,7 @@ import React, {
 import extend from 'extend';
 
 import { getFBCredentials, login, logout } from './util';
+import defaultStyles from './theme/style';
 const { FBLoginManager } = NativeModules;
 
 export default class FBLoginMock extends Component {
@@ -55,7 +56,10 @@ export default class FBLoginMock extends Component {
   }
 
   componentWillMount() {
-    this.props.style = extend(true, styles, this.props.style);
+
+    // extending default styles with provided styles.
+    const extendedStyles = extend(true, {}, defaultStyles, this.props.styleOverride);
+    this.setState({styles: StyleSheet.create(extendedStyles) });
 
     const subscriptions = this.state.subscriptions;
     Object.keys(FBLoginManager.Events).forEach((eventType) => {
@@ -90,16 +94,16 @@ export default class FBLoginMock extends Component {
     const loginText = this.props.loginText || "Log in with Facebook";
     const logoutText = this.props.logoutText || "Log out";
     const text = this.state.credentials ? logoutText : loginText;
-    const styles = this.props.styles;
+    const styles = this.state.styles;
     return (
-      <View>
+      <View style={styles.FBLoginMock}>
         <TouchableHighlight
-          style={styles.container}
+          style={styles.FBLoginMockButtonContainer}
           onPress={this.onPress.bind(this)}
         >
-          <View style={styles.FBLoginButton}>
-            <Image style={styles.FBLogo} source={require('../images/FB-f-Logo__white_144.png')} />
-            <Text style={[styles.FBLoginButtonText, this.state.credentials ? styles.FBLoginButtonTextLoggedIn : styles.FBLoginButtonTextLoggedOut]}
+          <View style={styles.FBLoginMockButton}>
+            <Image style={styles.FBLoginMockLogo} source={require('../images/FB-f-Logo__white_144.png')} />
+            <Text style={[styles.FBLoginMockButtonText, this.state.credentials ? styles.FBLoginMockButtonTextLoggedIn : styles.FBLoginMockButtonTextLoggedOut]}
                   numberOfLines={1}>{text}</Text>
           </View>
         </TouchableHighlight>
@@ -109,7 +113,7 @@ export default class FBLoginMock extends Component {
 }
 
 FBLoginMock.propTypes = {
-  style: View.propTypes.style,
+  styleOverride: PropTypes.object,
   permissions: PropTypes.array, // default: ["public_profile", "email"],
   loginText: PropTypes.string,
   logoutText: PropTypes.string,
@@ -122,56 +126,3 @@ FBLoginMock.propTypes = {
   onCancel: PropTypes.func,
   onPermissionsMissing: PropTypes.func
 };
-
-
-var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  FBLoginButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-
-    height: 30,
-    width: 175,
-    paddingLeft: 2,
-
-    backgroundColor: 'rgb(66,93,174)',
-    borderRadius: 3,
-    borderWidth: 1,
-    borderColor: 'rgb(66,93,174)',
-
-    shadowColor: "#000000",
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 1,
-      width: 0
-    }
-  },
-  FBLoginButtonText: {
-    color: 'white',
-    fontWeight: '600',
-    fontFamily: 'Helvetica neue',
-    fontSize: 14.2
-  },
-  FBLoginButtonTextLoggedIn: {
-    marginLeft: 5
-  },
-  FBLoginButtonTextLoggedOut: {
-    marginLeft: 18
-  },
-  FBLogo: {
-    position: 'absolute',
-    height: 14,
-    width: 14,
-
-    left: 7,
-    top: 7
-  }
-});
