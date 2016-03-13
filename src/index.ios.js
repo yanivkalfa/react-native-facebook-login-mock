@@ -21,9 +21,12 @@ export default class FBLoginMock extends Component {
     super(props);
 
     this.willUnmountSoon = false;
+    // extending default styles with provided styles.
+    const extendedStyles = extend(true, {}, defaultStyles, this.props.styleOverride);
     this.state = {
       credentials: null,
       subscriptions: [],
+      styles: StyleSheet.create(extendedStyles)
     };
   }
 
@@ -58,9 +61,6 @@ export default class FBLoginMock extends Component {
 
   componentWillMount() {
     this.willUnmountSoon = false;
-    // extending default styles with provided styles.
-    const extendedStyles = extend(true, {}, defaultStyles, this.props.styleOverride);
-    this.setState({styles: StyleSheet.create(extendedStyles) });
 
     const subscriptions = this.state.subscriptions;
     Object.keys(FBLoginManager.Events).forEach((eventType) => {
