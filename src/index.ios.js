@@ -2,14 +2,13 @@ import React, {
   Component,
   View,
   Text,
-  Image,
   TouchableHighlight,
   PropTypes,
   NativeModules,
   DeviceEventEmitter
 } from 'react-native';
 
-import extend from 'extend';
+const Icon = require('react-native-vector-icons/FontAwesome');
 
 import { getFBCredentials, login, logout, catchError } from './util';
 import styles from './theme/style';
@@ -89,26 +88,38 @@ export default class FBLoginMock extends Component {
 
   }
 
-  render() {
-    const { loginText = "Log in with Facebook", logoutText = "Log out", style ={} } = this.props;
-    const text = this.state.credentials ? logoutText : loginText;
+  prepareStyle(){
+    const { style ={} } = this.props;
+    const FBLMText = style.FBLMText || styles.FBLMText;
+    const FBLMTextLoggedIn = style.FBLMTextLoggedIn || styles.FBLMTextLoggedIn;
+    const FBLMTextLoggedOut = style.FBLMTextLoggedOut || styles.FBLMTextLoggedOut;
 
-    const FBLoginMockButtonText = style.FBLoginMockButtonText || styles.FBLoginMockButtonText;
-    const FBLoginMockButtonTextLoggedIn = style.FBLoginMockButtonTextLoggedIn || styles.FBLoginMockButtonTextLoggedIn;
-    const FBLoginMockButtonTextLoggedOut = style.FBLoginMockButtonTextLoggedOut || styles.FBLoginMockButtonTextLoggedOut;
+    return {
+      FBLMButton: style.FBLMButton || styles.FBLMButton,
+      FBLMButtonContent: style.FBLMButtonContent || styles.FBLMButtonContent,
+      FBLMIconWrap: style.FBLMIconWrap || styles.FBLMIconWrap,
+      FBLMIcon: style.FBLMIcon || styles.FBLMIcon,
+      FBLMTextWrap: style.FBLMTextWrap || styles.FBLMTextWrap,
+      FBLMText: [FBLMText, this.state.credentials ? FBLMTextLoggedIn : FBLMTextLoggedOut],
+    }
+  }
+
+  render() {
+    const { loginText = "Log in with Facebook", logoutText = "Log out"} = this.props;
+    const text = this.state.credentials ? logoutText : loginText;
+    const { FBLMButton, FBLMButtonContent, FBLMIconWrap, FBLMIcon, FBLMTextWrap, FBLMText} = this.prepareStyle();
     return (
-      <View style={ style.FBLoginMock || styles.FBLoginMock }>
-        <TouchableHighlight
-          style={ style.FBLoginMockButtonContainer || styles.FBLoginMockButtonContainer }
-          onPress={this.onPress.bind(this)}
-        >
-          <View style={ style.FBLoginMockButton || styles.FBLoginMockButton }>
-            <Image style={ style.FBLoginMockLogo || styles.FBLoginMockLogo} source={require('../images/FB-f-Logo__white_144.png')} />
-            <Text style={[FBLoginMockButtonText, this.state.credentials ? FBLoginMockButtonTextLoggedIn : FBLoginMockButtonTextLoggedOut]}
-                  numberOfLines={1}>{text}</Text>
+      <TouchableHighlight style={ FBLMButton } onPress={this.onPress.bind(this)}>
+        <View style={FBLMButtonContent}>
+          <View style={ FBLMIconWrap }>
+            <Icon name="facebook" style={ FBLMIcon }/>
           </View>
-        </TouchableHighlight>
-      </View>
+          <View style={ FBLMTextWrap }>
+            <Text style={FBLMText} numberOfLines={1}>{text}</Text>
+          </View>
+          <View style={ FBLMIconWrap }></View>
+        </View>
+      </TouchableHighlight>
     );
   }
 }

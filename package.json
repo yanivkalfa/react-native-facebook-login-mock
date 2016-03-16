@@ -1,6 +1,6 @@
 {
   "name": "react-native-facebook-login-mock",
-  "version": "0.0.49",
+  "version": "0.0.50",
   "description": "React native facebook login that alows changing the login button's style. ",
   "main": "./lib/index.ios.js",
   "scripts": {
@@ -83,9 +83,8 @@
     "webpack": "^1.11.0"
   },
   "dependencies": {
-    "bluebird": "^3.3.4",
-    "extend": "^3.0.0",
     "react-native": ">=0.18.1",
+    "react-native-vector-icons": "^1.3.2",
     "tiny-promisify": "^0.1.1"
   },
   "browserify": {

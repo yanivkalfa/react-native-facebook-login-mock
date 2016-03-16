@@ -1,23 +1,10 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-  FBLoginMock: {
+  FBLMButton: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  FBLoginMockButtonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  FBLoginMockButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems:'center',
 
     height: 30,
     width: 175,
@@ -36,25 +23,33 @@ export default StyleSheet.create({
       width: 0
     }
   },
-  FBLoginMockButtonText: {
+  FBLMButtonContent: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems:'center'
+  },
+  FBLMIconWrap:{
+    flex:1
+  },
+  FBLMIcon: {
+    fontSize:14,
+    color:'white'
+  },
+  FBLMTextWrap:{
+    flex:2,
+    alignItems:'center'
+  },
+  FBLMText: {
     color: 'white',
     fontWeight: '600',
     fontFamily: 'Helvetica neue',
-    fontSize: 14.2
+    fontSize: 14
   },
-  FBLoginMockButtonTextLoggedIn: {
+  FBLMTextLoggedIn: {
     marginLeft: 5
   },
-  FBLoginMockButtonTextLoggedOut: {
+  FBLMTextLoggedOut: {
     marginLeft: 18
-  },
-  FBLoginMockLogo: {
-    position: 'absolute',
-    height: 14,
-    width: 14,
-
-    left: 7,
-    top: 7
   }
 });
 
