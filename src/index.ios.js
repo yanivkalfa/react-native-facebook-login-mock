@@ -90,7 +90,7 @@ export default class FBLoginMock extends Component {
   }
 
   render() {
-    const { loginText = "Log in with Facebook", logoutText = "Log out", style } = this.props;
+    const { loginText = "Log in with Facebook", logoutText = "Log out", style ={} } = this.props;
     const text = this.state.credentials ? logoutText : loginText;
 
     const FBLoginMockButtonText = style.FBLoginMockButtonText || styles.FBLoginMockButtonText;
