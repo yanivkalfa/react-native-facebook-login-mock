@@ -1,7 +1,6 @@
 import React, {
   Component,
   View,
-  StyleSheet,
   Text,
   Image,
   TouchableHighlight,
@@ -13,7 +12,7 @@ import React, {
 import extend from 'extend';
 
 import { getFBCredentials, login, logout, catchError } from './util';
-import defaultStyles from './theme/style';
+import styles from './theme/style';
 const { FBLoginManager } = NativeModules;
 
 export default class FBLoginMock extends Component {
@@ -21,12 +20,10 @@ export default class FBLoginMock extends Component {
     super(props);
 
     this.willUnmountSoon = false;
-    // extending default styles with provided styles.
-    const extendedStyles = extend(true, {}, defaultStyles, this.props.styleOverride);
+
     this.state = {
       credentials: null,
-      subscriptions: [],
-      styles: StyleSheet.create(extendedStyles)
+      subscriptions: []
     };
   }
 
@@ -93,19 +90,21 @@ export default class FBLoginMock extends Component {
   }
 
   render() {
-    const loginText = this.props.loginText || "Log in with Facebook";
-    const logoutText = this.props.logoutText || "Log out";
+    const { loginText = "Log in with Facebook", logoutText = "Log out", style } = this.props;
     const text = this.state.credentials ? logoutText : loginText;
-    const styles = this.state.styles;
+
+    const FBLoginMockButtonText = style.FBLoginMockButtonText || styles.FBLoginMockButtonText;
+    const FBLoginMockButtonTextLoggedIn = style.FBLoginMockButtonTextLoggedIn || styles.FBLoginMockButtonTextLoggedIn;
+    const FBLoginMockButtonTextLoggedOut = style.FBLoginMockButtonTextLoggedOut || styles.FBLoginMockButtonTextLoggedOut;
     return (
-      <View style={styles.FBLoginMock}>
+      <View style={ style.FBLoginMock || styles.FBLoginMock }>
         <TouchableHighlight
-          style={styles.FBLoginMockButtonContainer}
+          style={ style.FBLoginMockButtonContainer || styles.FBLoginMockButtonContainer }
           onPress={this.onPress.bind(this)}
         >
-          <View style={styles.FBLoginMockButton}>
-            <Image style={styles.FBLoginMockLogo} source={require('../images/FB-f-Logo__white_144.png')} />
-            <Text style={[styles.FBLoginMockButtonText, this.state.credentials ? styles.FBLoginMockButtonTextLoggedIn : styles.FBLoginMockButtonTextLoggedOut]}
+          <View style={ style.FBLoginMockButton || styles.FBLoginMockButton }>
+            <Image style={ style.FBLoginMockLogo || styles.FBLoginMockLogo} source={require('../images/FB-f-Logo__white_144.png')} />
+            <Text style={[FBLoginMockButtonText, this.state.credentials ? FBLoginMockButtonTextLoggedIn : FBLoginMockButtonTextLoggedOut]}
                   numberOfLines={1}>{text}</Text>
           </View>
         </TouchableHighlight>
@@ -115,7 +114,7 @@ export default class FBLoginMock extends Component {
 }
 
 FBLoginMock.propTypes = {
-  styleOverride: PropTypes.object,
+  style: PropTypes.object,
   permissions: PropTypes.array, // default: ["public_profile", "email"],
   loginText: PropTypes.string,
   logoutText: PropTypes.string,

@@ -1,4 +1,6 @@
-export default {
+import { StyleSheet } from 'react-native';
+
+export default StyleSheet.create({
   FBLoginMock: {
     flex: 1,
     flexDirection: 'row',
@@ -54,4 +56,5 @@ export default {
     left: 7,
     top: 7
   }
-}
+});
+
